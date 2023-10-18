@@ -1,4 +1,4 @@
-use labradb::sql::LogicalPlan;
+use labradb::sql::{Context, LogicalPlan};
 
 fn main() {
     let plan = LogicalPlan::from_query("SELECT a, b from customers").unwrap();

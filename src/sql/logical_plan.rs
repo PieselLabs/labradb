@@ -72,7 +72,7 @@ impl LogicalPlan {
         }
     }
 
-    fn parse_where(expr: &ast::Expr, input: LogicalPlan) -> Result<Self, ParserError> {
+    fn parse_where(_expr: &ast::Expr, _input: LogicalPlan) -> Result<Self, ParserError> {
         todo!()
     }
 

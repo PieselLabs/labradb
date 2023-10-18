@@ -7,3 +7,6 @@ edition = "2021"
 
 [dependencies]
 sqlparser = "0.38.0"
+arrow = "47.0.0"
+parquet = "47.0.0"
+anyhow = "1.0.75"
