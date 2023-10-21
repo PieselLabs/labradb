@@ -550,6 +550,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "arrow",
+ "llvm-sys",
  "parquet",
  "sqlparser",
 ]
@@ -635,6 +636,20 @@ name = "libm"
 version = "0.2.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4ec2a862134d2a7d32d7983ddcdd1c4923530833c9f2ea1a44fc5fa473989058"
+
+[[package]]
+name = "llvm-sys"
+version = "170.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "46e01f7c4a977a4880a4366f3d2d5889cd83400f7af306fb2d0a2298fb3185b2"
+dependencies = [
+ "anyhow",
+ "cc",
+ "lazy_static",
+ "libc",
+ "regex",
+ "semver",
+]
 
 [[package]]
 name = "log"
