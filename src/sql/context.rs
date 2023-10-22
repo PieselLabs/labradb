@@ -1,5 +1,7 @@
 use anyhow::Result;
 use parquet::arrow::arrow_reader::*;
+
+#[allow(dead_code)]
 pub struct TableDescriptor {
     name: String,
     parquet_reader: ParquetRecordBatchReader,

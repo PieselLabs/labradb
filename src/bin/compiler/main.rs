@@ -1,32 +1,31 @@
-use std::{ffi::CStr, mem};
+use std::{
+    ffi::{CStr, CString},
+    mem,
+};
 
 use llvm_sys::{
-    core::*, execution_engine::*, ir_reader::*, prelude::LLVMModuleRef,
-    support::LLVMLoadLibraryPermanently, target::*, LLVMMemoryBuffer,
+    core::*, execution_engine::*, ir_reader::*, support::LLVMLoadLibraryPermanently, target::*,
 };
 
 fn main() {
+    let bitcode = include_bytes!(env!("LLVM_CODEGEN_PATH"));
+
     unsafe {
-        let mut out_buf = std::ptr::null_mut();
         let mut err_string = std::mem::zeroed();
 
-        if LLVMCreateMemoryBufferWithContentsOfFile(
-            b"/home/fexolm/git/labradb/codegen/main.bc\0".as_ptr() as *const _,
-            &mut out_buf,
-            &mut err_string,
-        ) != 0
-        {
-            let msg = CStr::from_ptr(err_string).to_str().unwrap();
-            println!("{msg}");
-            panic!();
-        }
+        let buf = LLVMCreateMemoryBufferWithMemoryRange(
+            bitcode.as_ptr() as *const _,
+            bitcode.len(),
+            b"bitcode_buf\0".as_ptr() as *const _,
+            0,
+        );
 
         let ctx = LLVMContextCreate();
-        let module = LLVMModuleCreateWithNameInContext("mod".as_ptr() as *const _, ctx);
+        let _module = LLVMModuleCreateWithNameInContext("mod".as_ptr() as *const _, ctx);
 
         let mut out_mod = std::ptr::null_mut();
 
-        if LLVMParseIRInContext(ctx, out_buf, &mut out_mod, &mut err_string) != 0 {
+        if LLVMParseIRInContext(ctx, buf, &mut out_mod, &mut err_string) != 0 {
             panic!();
         }
 
