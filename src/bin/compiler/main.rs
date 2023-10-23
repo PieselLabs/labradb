@@ -1,3 +1,5 @@
+#![crate_type = "bin"]
+
 use std::{
     ffi::{CStr, CString},
     mem,
@@ -54,13 +56,18 @@ fn main() {
             ee.assume_init()
         };
 
-        if LLVMLoadLibraryPermanently(
-            b"/home/fexolm/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-linux-gnu/lib/libstd-7b9f6349d87c69a1.so\0".as_ptr() as *const _
-        ) != 0{
+        if LLVMLoadLibraryPermanently(std::ptr::null()) != 0 {
             panic!()
         }
 
         let addr = LLVMGetFunctionAddress(ee, b"sum\0".as_ptr() as *const _);
+
+        {
+            let mut err = mem::zeroed();
+            if LLVMExecutionEngineGetErrMsg(ee, &mut err) != 0 {
+                panic!("Failed to execute kernel: {:?}", CStr::from_ptr(err));
+            }
+        }
 
         let f: fn(i32, i32) -> i32 = mem::transmute(addr);
 
