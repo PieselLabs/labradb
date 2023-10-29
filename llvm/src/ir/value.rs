@@ -3,9 +3,9 @@ use std::marker::PhantomData;
 use llvm_sys::prelude::LLVMValueRef;
 
 #[derive(Copy, Clone)]
-pub struct Value<'ctx> {
+pub struct Value<'m> {
     pub(crate) handle: LLVMValueRef,
-    _marker: PhantomData<&'ctx ()>,
+    _marker: PhantomData<&'m ()>,
 }
 
 impl<'ctx> Value<'ctx> {
