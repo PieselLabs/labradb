@@ -2,12 +2,10 @@
 
 use anyhow::Result;
 
-use llvm;
-
 fn main() -> Result<()> {
     let bitcode = include_bytes!(env!("LLVM_CODEGEN_PATH"));
 
-    let ctx = llvm::Context::new();
+    let ctx = llvm::Context::default();
 
     let module = llvm::Module::from_bytes(&ctx, bitcode)?;
 

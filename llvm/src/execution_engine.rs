@@ -1,9 +1,15 @@
-use std::{ffi::CStr, ffi::CString, mem};
-
 use crate::module::Module;
 use anyhow::{bail, Result};
-
-use llvm_sys::{execution_engine::*, support::LLVMLoadLibraryPermanently, target::*};
+use llvm_sys::{
+    execution_engine::{
+        LLVMCreateExecutionEngineForModule, LLVMDisposeExecutionEngine,
+        LLVMExecutionEngineGetErrMsg, LLVMExecutionEngineRef, LLVMGetFunctionAddress,
+        LLVMLinkInMCJIT,
+    },
+    support::LLVMLoadLibraryPermanently,
+    target::{LLVM_InitializeNativeAsmPrinter, LLVM_InitializeNativeTarget},
+};
+use std::{ffi::CStr, ffi::CString, mem};
 
 pub struct ExecutionEngine<'m> {
     _module: &'m Module<'m>,
@@ -42,7 +48,7 @@ impl<'m> ExecutionEngine<'m> {
     pub fn find_function<F: Sized>(&self, name: &str) -> Result<F> {
         unsafe {
             let name = CString::new(name)?;
-            let addr = LLVMGetFunctionAddress(self.handle, name.as_ptr() as *const _);
+            let addr = LLVMGetFunctionAddress(self.handle, name.as_ptr().cast());
 
             let mut err = mem::zeroed();
 

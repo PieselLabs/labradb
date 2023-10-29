@@ -1,11 +1,11 @@
-use anyhow::{bail, Result};
-use llvm_sys::core::*;
-use llvm_sys::ir_reader::LLVMParseIRInContext;
-use llvm_sys::prelude::*;
-
-use std::ffi::CStr;
-
 use crate::context::Context;
+use anyhow::{bail, Result};
+use llvm_sys::{
+    core::{LLVMCreateMemoryBufferWithMemoryRange, LLVMDisposeModule, LLVMDumpModule},
+    ir_reader::LLVMParseIRInContext,
+    prelude::*,
+};
+use std::ffi::CStr;
 
 pub struct Module<'ctx> {
     pub(crate) handle: LLVMModuleRef,
@@ -16,9 +16,9 @@ impl<'ctx> Module<'ctx> {
     pub fn from_bytes(ctx: &'ctx Context, bytes: &[u8]) -> Result<Self> {
         unsafe {
             let buf = LLVMCreateMemoryBufferWithMemoryRange(
-                bytes.as_ptr() as *const _,
+                bytes.as_ptr().cast(),
                 bytes.len(),
-                b"bitcode_buf\0".as_ptr() as *const _,
+                b"bitcode_buf\0".as_ptr().cast(),
                 0,
             );
 

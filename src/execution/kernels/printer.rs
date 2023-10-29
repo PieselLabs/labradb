@@ -12,7 +12,7 @@ pub fn print_result(kernel: &mut dyn Kernel<RecordBatch>) {
     while let Some(batch) = &kernel.next() {
         for i in 0..batch.num_rows() {
             for v in batch.columns() {
-                let ref v = **v;
+                let v = &(**v);
                 match v.data_type() {
                     arrow::datatypes::DataType::Null => todo!(),
                     arrow::datatypes::DataType::Boolean => todo!(),
@@ -79,7 +79,7 @@ pub fn print_result(kernel: &mut dyn Kernel<RecordBatch>) {
                     arrow::datatypes::DataType::RunEndEncoded(_, _) => todo!(),
                 }
             }
-            println!()
+            println!();
         }
     }
 }

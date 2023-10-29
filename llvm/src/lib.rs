@@ -1,3 +1,5 @@
+#![warn(clippy::all, clippy::pedantic)]
+#![allow(clippy::missing_errors_doc)]
 pub mod context;
 pub mod execution_engine;
 pub mod ir_builder;

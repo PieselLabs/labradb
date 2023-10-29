@@ -7,8 +7,8 @@ pub struct Context {
     pub(crate) handle: LLVMContextRef,
 }
 
-impl Context {
-    pub fn new() -> Self {
+impl Default for Context {
+    fn default() -> Self {
         unsafe {
             let handle = LLVMContextCreate();
             Context { handle }

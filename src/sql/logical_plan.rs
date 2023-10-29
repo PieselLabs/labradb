@@ -44,7 +44,7 @@ impl LogicalPlan {
 
     fn parse_query(query: &ast::Query) -> Result<Self, ParserError> {
         match *query.body {
-            ast::SetExpr::Select(ref select) => Self::parse_select(&select),
+            ast::SetExpr::Select(ref select) => Self::parse_select(select),
             _ => unimplemented!(),
         }
     }
@@ -56,14 +56,14 @@ impl LogicalPlan {
         plan = Self::parse_projection(&select.projection, plan)?;
 
         if let Some(filter) = &select.selection {
-            plan = Self::parse_where(&filter, plan)?;
+            plan = Self::parse_where(filter, plan)?;
         }
 
         Ok(plan)
     }
 
     fn parse_from(table: &ast::TableWithJoins) -> Result<Self, ParserError> {
-        assert!(table.joins.len() == 0);
+        assert!(table.joins.is_empty());
         match &table.relation {
             ast::TableFactor::Table { name, .. } => Ok(LogicalPlan::Scan(Box::new(TableScan {
                 table_name: name.to_string(),
@@ -77,7 +77,7 @@ impl LogicalPlan {
     }
 
     fn parse_projection(
-        projection: &Vec<ast::SelectItem>,
+        projection: &[ast::SelectItem],
         input: LogicalPlan,
     ) -> Result<Self, ParserError> {
         let columns = projection

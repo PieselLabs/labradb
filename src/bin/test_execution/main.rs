@@ -1,4 +1,4 @@
-use labradb::execution::kernels::{parquet_reader::*, print::*};
+use labradb::execution::kernels::{parquet_reader::*, printer::*};
 
 use anyhow::Result;
 

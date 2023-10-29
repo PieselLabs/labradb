@@ -2,7 +2,7 @@ use super::Kernel;
 
 use anyhow::Result;
 use arrow::record_batch::RecordBatch;
-use parquet::arrow::arrow_reader::*;
+use parquet::arrow::arrow_reader::{ParquetRecordBatchReader, ParquetRecordBatchReaderBuilder};
 
 pub struct ParquetReader {
     reader: ParquetRecordBatchReader,
@@ -25,10 +25,6 @@ impl Kernel<RecordBatch> for ParquetReader {
     fn next(&mut self) -> Option<RecordBatch> {
         let res = self.reader.next();
 
-        if let Some(res) = res {
-            Some(res.unwrap())
-        } else {
-            None
-        }
+        res.map(std::result::Result::unwrap)
     }
 }
