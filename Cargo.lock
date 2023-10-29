@@ -551,7 +551,6 @@ dependencies = [
  "anyhow",
  "arrow",
  "llvm",
- "llvm-sys",
  "parquet",
  "sqlparser",
 ]
