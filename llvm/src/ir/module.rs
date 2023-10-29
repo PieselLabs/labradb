@@ -5,11 +5,11 @@ use llvm_sys::{
     ir_reader::LLVMParseIRInContext,
     prelude::*,
 };
-use std::ffi::CStr;
+use std::{ffi::CStr, marker::PhantomData};
 
 pub struct Module<'ctx> {
     pub(crate) handle: LLVMModuleRef,
-    _ctx: &'ctx Context,
+    _marker: PhantomData<&'ctx Context>,
 }
 
 impl<'ctx> Module<'ctx> {
@@ -30,7 +30,10 @@ impl<'ctx> Module<'ctx> {
                 bail!("Failed to parse IR: {err}");
             }
 
-            Ok(Module { handle, _ctx: ctx })
+            Ok(Module {
+                handle,
+                _marker: PhantomData,
+            })
         }
     }
 
@@ -41,7 +44,7 @@ impl<'ctx> Module<'ctx> {
     }
 }
 
-impl<'ctx> Drop for Module<'ctx> {
+impl<'a> Drop for Module<'a> {
     fn drop(&mut self) {
         unsafe {
             LLVMDisposeModule(self.handle);

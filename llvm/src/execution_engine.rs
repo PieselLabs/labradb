@@ -9,15 +9,15 @@ use llvm_sys::{
     support::LLVMLoadLibraryPermanently,
     target::{LLVM_InitializeNativeAsmPrinter, LLVM_InitializeNativeTarget},
 };
-use std::{ffi::CStr, ffi::CString, mem};
+use std::{ffi::CStr, ffi::CString, marker::PhantomData, mem};
 
-pub struct ExecutionEngine<'m> {
-    _module: &'m Module<'m>,
+pub struct ExecutionEngine<'a> {
     handle: LLVMExecutionEngineRef,
+    module: PhantomData<&'a Module<'a>>,
 }
 
-impl<'m> ExecutionEngine<'m> {
-    pub fn create_for_module(module: &'m Module<'m>) -> Result<Self> {
+impl<'a> ExecutionEngine<'a> {
+    pub fn create_for_module(module: &'a Module<'a>) -> Result<Self> {
         unsafe {
             LLVMLinkInMCJIT();
             LLVM_InitializeNativeTarget();
@@ -39,7 +39,7 @@ impl<'m> ExecutionEngine<'m> {
             let handle = handle.assume_init();
 
             Ok(ExecutionEngine {
-                _module: module,
+                module: PhantomData,
                 handle,
             })
         }
@@ -64,7 +64,7 @@ impl<'m> ExecutionEngine<'m> {
     }
 }
 
-impl<'m> Drop for ExecutionEngine<'m> {
+impl<'a> Drop for ExecutionEngine<'a> {
     fn drop(&mut self) {
         unsafe {
             LLVMDisposeExecutionEngine(self.handle);
