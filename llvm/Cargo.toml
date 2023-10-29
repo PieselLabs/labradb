@@ -1,20 +1,10 @@
 [package]
-name = "labradb"
+name = "llvm"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-sqlparser = "0.38.0"
-arrow = "47.0.0"
-parquet = "47.0.0"
-anyhow = "1.0.75"
 llvm-sys = "170.0.0"
-llvm = { path = "./llvm" }
-
-[workspace]
-
-members = [
-    "llvm"
-]
+anyhow = "1.0.75"
