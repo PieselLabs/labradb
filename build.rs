@@ -17,6 +17,7 @@ fn main() {
         .arg("codegen/lib.rs")
         .arg("--crate-type=lib")
         .arg("--emit=llvm-bc")
+        .arg("-C").arg("opt-level=3")
         .arg(format!("--out-dir={target_dir}"))
         .status()
         .unwrap();

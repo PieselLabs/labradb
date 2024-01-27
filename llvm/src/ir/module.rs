@@ -47,7 +47,9 @@ impl<'ctx> Module<'ctx> {
 impl<'a> Drop for Module<'a> {
     fn drop(&mut self) {
         unsafe {
-            LLVMDisposeModule(self.handle);
+            // TODO: module is not disposing because execution engine takes the ownership
+            //       we need to express this semantics in rust
+            // LLVMDisposeModule(self.handle);
         }
     }
 }
